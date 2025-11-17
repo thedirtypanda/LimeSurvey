@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * LimeSurvey (tm)
  * Copyright (C) 2011 The LimeSurvey Project Team / Carsten Schmitz
  * All rights reserved.
@@ -10,8 +10,6 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * See COPYRIGHT.php for copyright notices and details.
- *
- *
  */
 
 /**
@@ -26,33 +24,62 @@ class LabelL10n extends LSActiveRecord
 {
     /**
      * Used for some statistical queries
+     *
      * @var int
      */
     public $maxsortorder;
 
-    /** @inheritdoc */
+    /**
+     * Returns the table name of this model.
+     *
+     * @inheritdoc
+     *
+     * @return string
+     */
     public function tableName()
     {
         return '{{label_l10ns}}';
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the primary key of this model.
+     *
+     * @inheritdoc
+     *
+     * @return string
+     * */
     public function primaryKey()
     {
         return 'id';
     }
+
     /**
+     * Returns the static model of the specified AR class.
+     *
+     * @param $className Classname
+     *
      * @inheritdoc
+     *
      * @return LabelL10n
      */
     public static function model($className = __CLASS__)
     {
-        /** @var self $model */
+        /**
+         * Model
+         *
+         *  @var self $model
+         */
         $model = parent::model($className);
         return $model;
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the validation rules of this model.
+     *
+     * @inheritdoc
+     *
+     * @return array
+     */
     public function rules()
     {
         return array(
@@ -62,7 +89,13 @@ class LabelL10n extends LSActiveRecord
         );
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the relations of this model.
+     *
+     * @inheritdoc
+     *
+     * @return array
+     */
     public function relations()
     {
         // NOTE: you may need to adjust the relation name and the related
@@ -72,6 +105,13 @@ class LabelL10n extends LSActiveRecord
         );
     }
 
+    /**
+     * Defines the default query scope for this ActiveRecord.
+     *
+     * This scope indexes the returned records by their language code.
+     *
+     * @return array The default scope configuration.
+     */
     public function defaultScope()
     {
         return array('index' => 'language');
