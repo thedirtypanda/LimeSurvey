@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * LimeSurvey (tm)
  * Copyright (C) 2011 The LimeSurvey Project Team / Carsten Schmitz
  * All rights reserved.
@@ -10,8 +10,6 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * See COPYRIGHT.php for copyright notices and details.
- *
- *
  */
 
 /**
@@ -25,30 +23,57 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
 {
     use PermissionTrait;
 
-    /** @inheritdoc */
+    /**
+     * Returns the table name of this model.
+     *
+     * @inheritdoc
+     *
+     * @return string
+     */
     public function tableName()
     {
         return '{{labelsets}}';
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the primary key of this model.
+     *
+     * @inheritdoc
+     *
+     * @return string
+     */
     public function primaryKey()
     {
         return 'lid';
     }
 
     /**
+     * Returns the static model of the specified AR class.
+     *
+     * @param $className Classname
+     *
      * @inheritdoc
+     *
      * @return LabelSet
      */
     public static function model($className = __CLASS__)
     {
-        /** @var self $model */
+        /**
+         * Model
+         *
+         * @var self $model
+         */
         $model = parent::model($className);
         return $model;
     }
 
-    /** @inheritdoc */
+    /**
+     * Return the validation rules of this model.
+     *
+     * @inheritdoc
+     *
+     * @return array
+     */
     public function rules()
     {
         return array(
@@ -62,7 +87,13 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
         );
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the relations of this model.
+     *
+     * @inheritdoc
+     *
+     * @return array
+     */
     public function relations()
     {
         // NOTE: you may need to adjust the relation name and the related
@@ -102,8 +133,11 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
     }
 
     /**
-     * @param $data
-     * @return bool|int
+     * Insert Data.
+     *
+     * @param $data Data
+     *
+     * @return     bool|int
      * @deprecated at 2018-01-29 use $model->attributes = $data && $model->save()
      */
     public function insertRecords($data)
@@ -118,6 +152,13 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
         return false;
     }
 
+    /**
+     * Returns the list of language codes defined for this object.
+     *
+     * The languages are stored as a space-separated string and converted to an array.
+     *
+     * @return string[] Array of language codes.
+     */
     public function getLanguageArray()
     {
         return explode(' ', $this->languages);
@@ -125,6 +166,7 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
 
     /**
      * Returns all defined buttons for the gridview.
+     *
      * @return string
      */
     public function getbuttons()
@@ -175,6 +217,12 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
         );
     }
 
+    /**
+     * Search
+     *
+     * @return CActiveDataProvider
+     * @todo   Update the PHPDoc.
+     */
     public function search()
     {
         $pageSize = Yii::app()->user->getState('pageSize', Yii::app()->params['defaultPageSize']);
@@ -200,13 +248,16 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
             ),
         );
 
-        $dataProvider = new CActiveDataProvider('LabelSet', array(
+        $dataProvider = new CActiveDataProvider(
+            'LabelSet',
+            array(
             'criteria' => $criteria,
             'sort' => $sort,
             'pagination' => array(
                 'pageSize' => $pageSize,
             ),
-        ));
+            )
+        );
 
         return $dataProvider;
     }
@@ -214,6 +265,8 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
 
     /**
      * Delete all childs(Label and LabelL10n) for a LabelSet
+     *
+     * @return void
      */
     public function deleteLabelsForLabelSet()
     {
@@ -228,7 +281,9 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
     /**
      * Get criteria from Permission
      * If currrent user didn't have global permission (read) : add Permission criteria, currentky only owner_id check
+     *
      * @param int|null $userid for this user id , if not set : get current one
+     *
      * @return CDbCriteria
      */
     protected static function getPermissionCriteria($userid = null)
@@ -245,10 +300,12 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
     }
 
     /**
-     * permission scope for this model
+     * Permission scope for this model
      * Actually only test if user have access to LabelSets (read)
      * Usage don't need read permission
-     * @param int|null $userid
+     *
+     * @param int|null $userid User ID
+     *
      * @return self
      */
     public function permission($userid = null)
@@ -264,7 +321,8 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
 
     /**
      * Get the owner id of this Survey group Used for Permission
-     * @return integer
+     *
+     * @return int
      */
     public function getOwnerId()
     {
@@ -272,7 +330,17 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
+     * Checks whether the user has the required permission for this label set.
+     * Global permissions are checked first. If the label set has no primary key,
+     * only global permissions can grant access.
+     *
+     * @param string   $sPermission The permission name (e.g. 'read').
+     * @param string   $sCRUD       The CRUD operation ('create', 'read', 'update', 'delete').
+     * @param int|null $iUserID     Optional user ID to check. Defaults to current user.
+     *
+     * @return bool bool Whether the user has permission.
      */
     public function hasPermission($sPermission, $sCRUD = 'read', $iUserID = null)
     {
@@ -290,9 +358,11 @@ class LabelSet extends LSActiveRecord implements PermissionInterface
 
     /**
      * Sanitize string for any attribute, XSS and XSS in javascript function too.
-     * @todo create a Validator to be used for all such element : no need HTML, informative input used only for admin purpose.
+     *
      * @param string $attribute to sanitize
+     *
      * @return string sanitized attribute
+     * @todo   create a Validator to be used for all such element : no need HTML, informative input used only for admin purpose.
      */
     public static function sanitizeAttribute($attribute)
     {
