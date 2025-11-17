@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * LimeSurvey (tm)
  * Copyright (C) 2011 The LimeSurvey Project Team / Carsten Schmitz
  * All rights reserved.
@@ -10,8 +10,6 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * See COPYRIGHT.php for copyright notices and details.
- *
- *
  */
 
 /**
@@ -28,34 +26,58 @@ class Label extends LSActiveRecord
 {
     /**
      * Used for some statistical queries
+     *
      * @var int
      */
     public $maxsortorder;
 
-    /** @inheritdoc */
+    /**
+     * Returns the table name of this model.
+     *
+     * @inheritdoc
+     * @return     string
+     */
     public function tableName()
     {
         return '{{labels}}';
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the primary key of this model.
+     *
+     * @inheritdoc
+     * @return     string
+     */
     public function primaryKey()
     {
         return 'id';
     }
 
     /**
+     * Returns the static model of the specified AR class.
+     *
+     * @param $className Classname
+     *
      * @inheritdoc
-     * @return Label
+     * @return     Label
      */
     public static function model($className = __CLASS__)
     {
-        /** @var self $model */
+        /**
+         * Model
+         *
+         * @var self $model
+         */
         $model = parent::model($className);
         return $model;
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the validation rules of this model.
+     *
+     * @inheritdoc
+     * @return     array
+     */
     public function rules()
     {
         return array(
@@ -77,7 +99,12 @@ class Label extends LSActiveRecord
         );
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the relations of this model.
+     *
+     * @inheritdoc
+     * @return     array
+     */
     public function relations()
     {
         // NOTE: you may need to adjust the relation name and the related
@@ -88,6 +115,16 @@ class Label extends LSActiveRecord
         );
     }
 
+    /**
+     * Returns the translated attribute set for the given language.
+     *
+     * @param string $sLanguage Language code (e.g. "de", "en")
+     *
+     * @return array Merged attribute set for the provided language.
+     * @todo   Consider renaming to getTranslatedAttributes() and
+     *       unifying fallback behavior. Current implementation
+     *       mixes base and translated attributes inconsistently.
+     */
     public function getTranslated($sLanguage)
     {
         $ol10N = $this->labell10ns;
@@ -99,8 +136,13 @@ class Label extends LSActiveRecord
     }
 
     /**
-     * @param integer $lid
+     * Returns the label code information.
+     *
+     * @param integer $lid Label ID
+     *
      * @return array
+     *
+     * @todo Please refactor the parameter. int $labelId would be great.
      */
     public function getLabelCodeInfo($lid)
     {
@@ -108,7 +150,11 @@ class Label extends LSActiveRecord
     }
 
     /**
-     * @param $data
+     * Insert Records.
+     *
+     * @param $data Data
+     *
+     * @return     void
      * @deprecated at 2018-02-03 use $model->attributes = $data && $model->save()
      */
     public function insertRecords($data)
