@@ -1,41 +1,70 @@
 <?php
 
-/*
-* LimeSurvey
-* Copyright (C) 2007-2015 The LimeSurvey Project Team / Carsten Schmitz
-* All rights reserved.
-* License: GNU/GPL License v2 or later, see LICENSE.php
-* LimeSurvey is free software. This version may have been modified pursuant
-* to the GNU General Public License, and as distributed it includes or
-* is derivative of works licensed under the GNU General Public License or
-* other free or open source software licenses.
-* See COPYRIGHT.php for copyright notices and details.
-*/
+/**
+ * LimeSurvey
+ * Copyright (C) 2007-2015 The LimeSurvey Project Team / Carsten Schmitz
+ * All rights reserved.
+ * License: GNU/GPL License v2 or later, see LICENSE.php
+ * LimeSurvey is free software. This version may have been modified pursuant
+ * to the GNU General Public License, and as distributed it includes or
+ * is derivative of works licensed under the GNU General Public License or
+ * other free or open source software licenses.
+ * See COPYRIGHT.php for copyright notices and details.
+ */
 
 /**
  * Admin Theme Model
  *
- *
- * @package       LimeSurvey
- * @subpackage    Backend
+ * @package    LimeSurvey
+ * @subpackage Backend
  */
 class AdminTheme extends CFormModel
 {
-    /** @var string $name Admin Theme's name */
+    /**
+     * Admin Theme's name
+     *
+     * @var string
+     */
     public $name;
-    /** @var string $path Admin Theme's path */
+
+    /**
+     * Admin Theme's path
+     *
+     * @var string
+     */
     public $path;
-    /** @var string $sTemplateUrl URL to reach Admin Theme (used to get CSS/JS/Files when asset manager is off) */
+
+    /**
+     * URL to reach Admin Theme (used to get CSS/JS/Files when asset manager is off)
+     *
+     * @var string
+     */
     public $sTemplateUrl;
-    /** @var mixed $config Contains the Admin Theme's configuration file */
+
+    /**
+     * Configuration file
+     *
+     * @var mixed
+     */
     public $config;
-    /** @var boolean $use_asset_manager If true, force the use of asset manager even if debug mode is on (useful to debug asset manager's problems) */
+
+    /**
+     * $use_asset_manager If true, force the use of asset manager even if debug mode is on (useful to debug asset manager's problems)
+     *
+     * @var bool
+     */
     public static $use_asset_manager;
-    /** @var AdminTheme $instance The instance of theme object */
+
+    /**
+     * Instance
+     *
+     * @var AdminTheme
+     */
     private static $instance;
 
     /**
      * Get the list of admin theme, as an array containing each configuration object for each template
+     *
      * @return array the array of configuration object
      */
     public static function getAdminThemeList()
@@ -57,6 +86,7 @@ class AdminTheme extends CFormModel
      * - set the admin theme variables
      * - set the admin theme constants
      * - Register all the needed CSS/JS files
+     *
      * @return AdminTheme
      */
     public function setAdminTheme()
@@ -128,6 +158,8 @@ class AdminTheme extends CFormModel
      * Register all the styles and scripts of the current template.
      * Check if RTL is needed, use asset manager if needed.
      * This function is public because it appears that sometime, the package need to be register again in header (probably a cache problem)
+     *
+     * @return void
      */
     public function registerStylesAndScripts()
     {
@@ -144,8 +176,12 @@ class AdminTheme extends CFormModel
         if (!Yii::app()->request->getQuery('isAjax', false)) {
             Yii::app()->getClientScript()->registerMetaTag('width=device-width, initial-scale=1.0', 'viewport'); // See: https://github.com/LimeSurvey/LimeSurvey/blob/master/application/extensions/bootstrap/components/TbApi.php#l108-l115
             //            App()->bootstrap->registerTooltipAndPopover(); // See : https://github.com/LimeSurvey/LimeSurvey/blob/master/application/extensions/bootstrap/components/TbApi.php#l153-l160
-            App()->getClientScript()->registerScript('coreuser', '
-           window.LS = window.LS || {}; window.LS.globalUserId = "' . Yii::app()->user->id . '";', CClientScript::POS_HEAD);
+            App()->getClientScript()->registerScript(
+                'coreuser',
+                '
+           window.LS = window.LS || {}; window.LS.globalUserId = "' . Yii::app()->user->id . '";',
+                CClientScript::POS_HEAD
+            );
             App()->getClientScript()->registerPackage('jquery-migrate'); // jquery + migrate
             App()->getClientScript()->registerPackage('jqueryui'); // Added for nestedSortable to work (question organizer)
             App()->getClientScript()->registerPackage('js-cookie'); // js-cookie
@@ -213,8 +249,10 @@ class AdminTheme extends CFormModel
 
     /**
      * Register admin-theme package
-     * @param $files
-     * @param $aCssFiles
+     *
+     * @param $files     Files
+     * @param $aCssFiles List of CSS Files
+     *
      * @return void
      */
     private function registerAdminTheme($files, $aCssFiles)
@@ -253,6 +291,7 @@ class AdminTheme extends CFormModel
      * Get instance of theme object.
      * Will instantiate the Admin Theme object first time it is called.
      * Please use this instead of global variable.
+     *
      * @return AdminTheme
      */
     public static function getInstance()
@@ -265,6 +304,8 @@ class AdminTheme extends CFormModel
     }
 
     /**
+     * Return other assets.
+     *
      * @return string[]
      */
     public static function getOtherAssets()
@@ -308,7 +349,8 @@ class AdminTheme extends CFormModel
     /**
      * Return an array containing the configuration object of all templates in a given directory
      *
-     * @param string $sDir          the directory to scan
+     * @param string $sDir the directory to scan
+     *
      * @return array                the array of object
      */
     private static function getThemeList($sDir)
@@ -348,6 +390,8 @@ class AdminTheme extends CFormModel
 
     /**
      * Few constants depending on Template
+     *
+     * @return void
      */
     private function defineConstants()
     {
@@ -388,7 +432,8 @@ class AdminTheme extends CFormModel
      * Use to check if admin theme is standard
      *
      * @param string $sAdminThemeName the name of the template
-     * @return boolean                  return true if it's a standard template, else false
+     *
+     * @return boolean                return true if it's a standard template, else false
      */
     private function isStandardAdminTheme($sAdminThemeName)
     {
