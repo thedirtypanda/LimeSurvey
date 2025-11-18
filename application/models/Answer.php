@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * LimeSurvey
  * Copyright (C) 2007-2017 The LimeSurvey Project Team / Carsten Schmitz
  * All rights reserved.
@@ -10,11 +10,11 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * See COPYRIGHT.php for copyright notices and details.
- *
  */
 
 /**
  * Class Answer
+ *
  * @property integer $aid PK
  * @property integer $qid Question id
  * @property string $code Answer code
@@ -33,29 +33,56 @@ class Answer extends LSActiveRecord
     private $oldScaleId;
 
     /**
+     *  Returns the static model of the specified AR class.
+     *
+     * @param $className Classname
+     *
      * @inheritdoc
+     *
      * @return static
      */
     public static function model($className = __CLASS__)
     {
-        /** @var self $model */
+        /**
+         * Model
+         *
+         * @var self $model
+         */
         $model = parent::model($className);
         return $model;
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the table name of this model.
+     *
+     * @inheritdoc
+     *
+     * @return string
+     */
     public function tableName()
     {
         return '{{answers}}';
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the primary key of this model.
+     *
+     * @inheritdoc
+     *
+     * @return string
+     */
     public function primaryKey()
     {
         return 'aid';
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the relations of this model.
+     *
+     * @inheritdoc
+     *
+     * @return array
+     */
     public function relations()
     {
         $alias = $this->getTableAlias();
@@ -72,7 +99,13 @@ class Answer extends LSActiveRecord
         );
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the validation rules of this model.
+     *
+     * @inheritdoc
+     *
+     * @return array
+     */
     public function rules()
     {
         return array(
@@ -99,6 +132,11 @@ class Answer extends LSActiveRecord
         );
     }
 
+    /**
+     * This defaultScope indexes the ActiveRecords given back by attribute name.
+     *
+     * @return array
+     */
     public function defaultScope()
     {
         return array(
@@ -107,7 +145,10 @@ class Answer extends LSActiveRecord
     }
 
     /**
-     * @param integer $qid
+     * Returns the answers.
+     *
+     * @param integer $qid Question ID
+     *
      * @return CDbDataReader
      */
     public function getAnswers($qid)
@@ -121,6 +162,15 @@ class Answer extends LSActiveRecord
             ->query();
     }
 
+    /**
+     * Validates that the answer code is unique within the same question and scale.
+     *
+     * If the code, question ID, or scale ID has changed compared to the original
+     * values, a lookup is performed to ensure no duplicate exists.
+     *
+     * @return void
+     * @todo   Refactor this function for better readability.
+     */
     public function checkUniqueness()
     {
         if ($this->code !== $this->oldCode || $this->qid != $this->oldQid || $this->scale_id != $this->oldScaleId) {
@@ -131,6 +181,11 @@ class Answer extends LSActiveRecord
         }
     }
 
+    /**
+     * After Find.
+     *
+     * @return void
+     */
     protected function afterFind()
     {
         parent::afterFind();
@@ -142,11 +197,11 @@ class Answer extends LSActiveRecord
     /**
      * Return the key=>value answer for a given $qid
      *
-     * @staticvar array $answerCache
-     * @param integer $qid
-     * @param string $code
-     * @param string $sLanguage
-     * @param integer $iScaleID
+     * @param integer $qid       Question ID
+     * @param string  $code      Question Code
+     * @param string  $sLanguage Language
+     * @param integer $iScaleID  Scale
+     *
      * @return string|null The answer text
      */
     public function getAnswerFromCode($qid, $code, $sLanguage, $iScaleID = 0)
@@ -155,9 +210,9 @@ class Answer extends LSActiveRecord
 
         if (
             array_key_exists($qid, $answerCache)
-                && array_key_exists($code, $answerCache[$qid])
-                && array_key_exists($sLanguage, $answerCache[$qid][$code])
-                && array_key_exists($iScaleID, $answerCache[$qid][$code][$sLanguage])
+            && array_key_exists($code, $answerCache[$qid])
+            && array_key_exists($sLanguage, $answerCache[$qid][$code])
+            && array_key_exists($iScaleID, $answerCache[$qid][$code][$sLanguage])
         ) {
             // We have a hit :)
             return $answerCache[$qid][$code][$sLanguage][$iScaleID];
@@ -176,9 +231,16 @@ class Answer extends LSActiveRecord
     }
 
     /**
-     * @param integer $newsid
-     * @param integer $oldsid
-     * @return static[]
+     * Finds all answers for a given new survey ID that still reference
+     * an old survey ID via an {INSERTANS::...} tag.
+     *
+     * @param int $newsid The new survey ID.
+     * @param int $oldsid The old survey ID referenced in the INSERTANS tag.
+     *
+     * @return static[] Matching records indexed according to the model's default settings.
+     * @todo   Rename this method and its parameters to more descriptive names,
+     *   e.g. findInsertAnsReferences($newSid, $oldSid), while keeping the
+     *   current signature temporarily for backward compatibility.
      */
     public function oldNewInsertansTags($newsid, $oldsid)
     {
@@ -189,9 +251,18 @@ class Answer extends LSActiveRecord
     }
 
     /**
-     * @param array $data
-     * @param bool|mixed $condition
-     * @return int
+     * Updates records in the table for the given condition.
+     *
+     * If no condition is provided, all rows in the table will be updated.
+     *
+     * @param array              $data      Column-value pairs to be updated.
+     * @param string|array|false $condition Optional WHERE condition. Can be a string,
+     *                                      an array (Yii format) or false to update
+     *                                      all rows.
+     *
+     * @return int Number of affected rows.
+     *
+     * @todo Consider splitting into a strict variant that requires a condition to avoid accidental full-table updates.
      */
     public function updateRecord($data, $condition = false)
     {
@@ -199,10 +270,12 @@ class Answer extends LSActiveRecord
     }
 
     /**
-     * @param array $data
-     * @return boolean|null
-     * @deprecated at 2018-01-29 use $model->attributes = $data && $model->save()
+     * Inserts records in the table.
      *
+     * @param array $data Column-value pairs to be updated.
+     *
+     * @return     boolean|null
+     * @deprecated at 2018-01-29 use $model->attributes = $data && $model->save()
      */
     public function insertRecords($data)
     {
@@ -220,10 +293,11 @@ class Answer extends LSActiveRecord
     /**
      * Updates sort order of answers inside a question
      *
+     * @param int $qid Question ID
+     *
+     * @return void
      * @static
      * @access public
-     * @param int $qid
-     * @return void
      */
     public static function updateSortOrder($qid)
     {
@@ -237,9 +311,12 @@ class Answer extends LSActiveRecord
     }
 
     /**
-     * @param string $fields
-     * @param string $orderby
-     * @param mixed $condition
+     * Return answers for statistics.
+     *
+     * @param string $fields    Fields
+     * @param mixed  $condition Condition
+     * @param string $orderby   OrderBy
+     *
      * @return array
      */
     public function getAnswersForStatistics($fields, $condition, $orderby)
@@ -248,9 +325,12 @@ class Answer extends LSActiveRecord
     }
 
     /**
-     * @param string $fields
-     * @param string $orderby
-     * @param mixed $condition
+     * Returns questions for statistics.
+     *
+     * @param string $fields    Fields
+     * @param mixed  $condition Condition
+     * @param string $orderby   OrderBy
+     *
      * @return array
      */
     public function getQuestionsForStatistics($fields, $condition, $orderby)
