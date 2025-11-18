@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * LimeSurvey
  * Copyright (C) 2007-2011 The LimeSurvey Project Team / Carsten Schmitz
  * All rights reserved.
@@ -10,7 +10,6 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * See COPYRIGHT.php for copyright notices and details.
- *
  */
 
 /**
@@ -20,46 +19,78 @@
  * @property int $aid Answer Id
  * @property string $answer The answer text
  * @property string $language language code
- *
  */
 class AnswerL10n extends LSActiveRecord
 {
-    /** @inheritdoc */
+    /**
+     * Returns the table name of this model.
+     *
+     * @inheritdoc
+     * @return     string
+     */
     public function tableName()
     {
         return '{{answer_l10ns}}';
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the primary key of this model.
+     *
+     * @inheritdoc
+     * @return     string
+     */
     public function primaryKey()
     {
         return 'id';
     }
 
+    /**
+     * This defaultScope indexes the ActiveRecords given back by attribute name.
+     *
+     * @return array
+     */
     public function defaultScope()
     {
         return array('index' => 'language');
     }
 
     /**
+     * Returns the static model of the specified AR class.
+     *
+     * @param $className Classname
+     *
      * @inheritdoc
-     * @return AnswerL10n
+     * @return     AnswerL10n
      */
     public static function model($className = __CLASS__)
     {
-        /** @var self $model */
+        /**
+         * Model
+         *
+         * @var self $model
+         */
         $model = parent::model($className);
         return $model;
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the relations of this model.
+     *
+     * @inheritdoc
+     * @return     array
+     */
     public function relations()
     {
         return [];
     }
 
 
-    /** @inheritdoc */
+    /**
+     * Returns the validation rules of this model.
+     *
+     * @inheritdoc
+     * @return     array
+     */
     public function rules()
     {
         return [
