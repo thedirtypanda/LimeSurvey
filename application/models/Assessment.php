@@ -41,17 +41,28 @@ class Assessment extends LSActiveRecord
     }
 
     /**
+     * Returns the static model of the specified AR class.
+     *
+     * @return $className Classname
+     *
      * @inheritdoc
-     * @return Assessment
+     * @return     Assessment
      */
     public static function model($className = __CLASS__)
     {
-        /** @var self $model */
+        /**
+ * @var self $model
+*/
         $model = parent::model($className);
         return $model;
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the validaition rules of this model.
+     *
+     * @inheritdoc
+     * @return     array
+     */
     public function rules()
     {
         return array(
@@ -60,21 +71,33 @@ class Assessment extends LSActiveRecord
         );
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the table name of this model.
+     *
+     * @inheritdoc
+     * @return     string
+     */
     public function tableName()
     {
         return '{{assessments}}';
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns the primary key of this model.
+     *
+     * @inheritdoc
+     * @return     string
+     */
     public function primaryKey()
     {
         return array('id', 'language');
     }
 
-        /**
-         * @return array customized attribute labels (name=>label)
-         */
+    /**
+     * Returns the attribute labels.
+     *
+     * @return array customized attribute labels (name=>label)
+     */
     public function attributeLabels()
     {
         return array(
@@ -88,6 +111,11 @@ class Assessment extends LSActiveRecord
         );
     }
 
+    /**
+     * Returns the buttons.
+     *
+     * @return mixed
+     */
     public function getButtons()
     {
 
@@ -132,6 +160,11 @@ class Assessment extends LSActiveRecord
         );
     }
 
+    /**
+     * Returns the columns.
+     *
+     * @return array
+     */
     public function getColumns()
     {
         return array(
@@ -179,6 +212,12 @@ class Assessment extends LSActiveRecord
         );
     }
 
+    /**
+     * Search.
+     *
+     * @return CActiveDataProvider
+     * @todo   Please update PHPDoc.
+     */
     public function search()
     {
         // @todo Please modify the following code to remove attributes that should not be searched.
@@ -212,8 +251,11 @@ class Assessment extends LSActiveRecord
     }
 
     /**
-     * @param array $data
-     * @return Assessment
+     * Insert records.
+     *
+     * @param array $data Data
+     *
+     * @return     Assessment
      * @deprecated use model->attributes = $data && $model->save()
      */
     public static function insertRecords($data)
@@ -230,10 +272,13 @@ class Assessment extends LSActiveRecord
     }
 
     /**
-     * @param integer $id
-     * @param integer $iSurveyID
-     * @param string $language
-     * @param array $data
+     * Updates a assessment.
+     *
+     * @param integer $id        Assessment ID
+     * @param integer $iSurveyID Survey ID
+     * @param string  $language  Language
+     * @param array   $data      Data
+     *
      * @return bool True if the assessment could be updated. False if the assessment is not found of the update failed.
      */
     public static function updateAssessment($id, $iSurveyID, $language, array $data)
@@ -251,7 +296,8 @@ class Assessment extends LSActiveRecord
     /**
      * Checks for a survey if it has asssessment activated. Checks also inherited status ('I')
      *
-     * @param $surveyid
+     * @param $surveyid Survey ID
+     *
      * @return boolean true if it is actice, false otherwise and if survey does not exist
      */
     public static function isAssessmentActive($surveyid)
